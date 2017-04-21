@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    {% load staticfiles %}
+    <link rel="stylesheet" href="{% static 'appointments/css/appointment.css' %}"media="screen" title="no title"  charset="utf-8">
+    <title>Document</title>
+</head>
+<body>
+<div id="Wrapper">
+   <h2>Hello, {{request.session.name}}!</h2>
+   <h4><a href="{% url 'appointments:logout' %}">Logout</a></h4>
+   <h3>Here are you Appointments for today {{today}}</h3>
+   <table id=all_task>
+       <tr>
+           <th>Task  </th>
+           <th>Time  </th>
+           <th>Status  </th>
+           <th>Action</th>
+       </tr>
+       {% for appointment in appointments %}
+        <div class=task_row>
+            <tr>
+            {% if today == appointment.date %}
+                <td>{{appointment.task}}</td>
+                <td>{{appointment.time}}</td>
+                <td>{{appointment.status}}</td>
+                {% if appointment.status != 'done' %}
+                <td><a href="{% url 'appointments:edit_task' id=appointment.id%}">Edit</a> <a href="{% url 'appointments:delete_task' id=appointment.id%}">Delete</a></td>
+                {% endif %}   
+            {% endif %}
+            </tr>
+        <div>
+    {% endfor %}
+   </table>
+   <h3>Your Upcoming Appointments:</h3>
+   <table id=all_task>
+       <tr>
+           <th>Task  </th>
+           <th>Date  </th>
+           <th>Time  </th>
+       </tr>
+       {%for appointment in appointments%}
+        <div class=task_row>
+            <tr>
+                {% if today < appointment.date %}
+                <td>{{appointment.task}}</td>
+                <td>{{appointment.date}}</td>
+                <td>{{appointment.time}}</td>    
+                {% endif %}
+            </tr>
+        <div>
+    {% endfor %}
+   </table>
+
+
+
+
+
+
+   <h3>Add Appointment</h3>
+   <form action="{% url 'appointments:add_task'%}" method="POST">
+       Date:<input type="date" name="date"><br>
+       Time: <input type="time" name="time"><br>
+       Tasks: <input type="text" name="task"><br>
+       <input type="submit" value="Add">
+       {% csrf_token %} 
+   </form>
+   {% for message in messages %}
+        <p>{{message}}</p>
+    {% endfor %}
+
+</div>
+</body>
+</html>

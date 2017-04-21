@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <h4><a href="{% url 'appointments:logout' %}">Logout</a></h4>
+    <h4><a href="{% url 'appointments:home' %}">Home</a></h4>
+    <form action="{% url 'appointments:update_task' id=task.id%}" method="POST">
+        Task: <input type="text" name="task" value="{{task.task}}"><br>
+
+        Status:
+        <select name='status'>
+            <option value="done">done</option>
+            <option value="missed">missed</option>
+            <option value="pending">pending</option>
+        </select><br> 
+        Current Date: {{task.date}}<br>
+        New Date: <input type="date" name="date"><br>
+        Current Time: {{task.time}}<br>
+        New Time: <input type="time" name="time"><br>
+        {% csrf_token %}
+        <input type="submit"value="Update Task">
+    </form>
+
+    {% for message in messages %}
+        <p>{{message}}</p>
+    {% endfor %}
+</body>
+</html>
